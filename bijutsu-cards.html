@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>美術暗記帖</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+JP:wght@300;400;500;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0908;
+  --surface: #111009;
+  --surface2: #1a1814;
+  --border: rgba(195,158,82,0.15);
+  --border2: rgba(195,158,82,0.08);
+  --gold: #c39e52;
+  --gold2: #e8c97a;
+  --gold-dim: rgba(195,158,82,0.4);
+  --text: #e8e0d0;
+  --text2: #a89880;
+  --text3: #6a5e50;
+  --red: #c0402a;
+  --green: #4a7c59;
+  --red-dim: rgba(192,64,42,0.15);
+  --green-dim: rgba(74,124,89,0.15);
+  --radius: 2px;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Serif JP', serif;
+  overflow: hidden;
+}
+
+/* ── SCREENS ── */
+.screen {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: none;
+  flex-direction: column;
+}
+.screen.active { display: flex; }
+
+/* ── HEADER ── */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.app-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--gold2);
+}
+
+.app-title span {
+  font-style: italic;
+  font-size: 0.75rem;
+  color: var(--text3);
+  display: block;
+  letter-spacing: 0.2em;
+  font-weight: 400;
+  margin-top: 1px;
+}
+
+.header-btn {
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text2);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: all 0.15s;
+  border-radius: var(--radius);
+}
+.header-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+.header-btn.gold { border-color: var(--gold-dim); color: var(--gold); }
+.header-btn.gold:hover { background: var(--gold); color: var(--bg); }
+
+/* ── HOME SCREEN ── */
+#home .content { padding: 20px; flex: 1; }
+
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.stat-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 14px 12px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-box::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0.4;
+}
+
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--gold2);
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  color: var(--text3);
+  letter-spacing: 0.15em;
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.cat-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+
+.cat-item {
+  display: flex;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  gap: 14px;
+}
+
+.cat-item:hover, .cat-item:active { border-color: var(--gold-dim); background: var(--surface2); }
+
+.cat-icon {
+  font-size: 1.2rem;
+  width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.cat-info { flex: 1; }
+
+.cat-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.cat-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+}
+
+.cat-rate {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.progress-ring {
+  width: 36px; height: 36px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.progress-ring svg {
+  transform: rotate(-90deg);
+  width: 100%; height: 100%;
+}
+
+.progress-ring .track { fill: none; stroke: var(--surface2); stroke-width: 2.5; }
+.progress-ring .fill { fill: none; stroke: var(--gold); stroke-width: 2.5; stroke-linecap: round; transition: stroke-dashoffset 0.5s ease; }
+
+.ring-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  color: var(--gold);
+}
+
+.all-study-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--gold);
+  color: var(--bg);
+  border: none;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  margin-bottom: 8px;
+}
+.all-study-btn:hover { opacity: 0.85; }
+
+.reset-btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid rgba(192,64,42,0.25);
+  color: rgba(192,64,42,0.6);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 24px;
+}
+.reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* ── STUDY SCREEN ── */
+#study { background: var(--bg); }
+
+.study-header {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  gap: 12px;
+  border-bottom: 1px solid var(--border2);
+  flex-shrink: 0;
+  background: var(--bg);
+}
+
+.back-btn {
+  width: 32px; height: 32px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.back-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+.study-title {
+  flex: 1;
+  font-size: 0.85rem;
+  color: var(--text2);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.study-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--text3);
+  flex-shrink: 0;
+}
+
+.prog-bar {
+  height: 2px;
+  background: var(--surface2);
+  flex-shrink: 0;
+}
+
+.prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  transition: width 0.4s ease;
+}
+
+.card-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  min-height: 0;
+}
+
+/* Flashcard */
+.scene {
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 3/4;
+  perspective: 1200px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.fc {
+  width: 100%; height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.3, 0, 0.1, 1);
+}
+
+.fc.flipped { transform: rotateY(180deg); }
+
+.fc-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.fc-front { }
+
+.fc-back {
+  transform: rotateY(180deg);
+  background: var(--surface2);
+}
+
+.fc-img-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  background: #050404;
+}
+
+.fc-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.fc-img-placeholder {
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--text3);
+}
+
+.fc-img-placeholder .icon { font-size: 3rem; opacity: 0.3; }
+.fc-img-placeholder .txt {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  opacity: 0.4;
+}
+
+.fc-front-footer {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--border2);
+  flex-shrink: 0;
+}
+
+.fc-tap-hint {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--text3);
+  letter-spacing: 0.15em;
+}
+
+.fc-cat-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  color: var(--gold-dim);
+  letter-spacing: 0.12em;
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Back face */
+.fc-back-content {
+  flex: 1;
+  padding: 18px 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fc-work-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gold2);
+  line-height: 1.3;
+  margin-bottom: 14px;
+}
+
+.fc-fields { display: flex; flex-direction: column; gap: 8px; }
+
+.fc-field {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.fc-field-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  color: var(--text3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  width: 52px;
+  flex-shrink: 0;
+}
+
+.fc-field-val {
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.fc-back-footer {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.tts-btn, .rec-btn {
+  height: 32px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text2);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  transition: all 0.15s;
+  border-radius: var(--radius);
+}
+
+.tts-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+.tts-btn.speaking { border-color: var(--gold); color: var(--gold); background: rgba(195,158,82,0.08); }
+
+.rec-btn:hover { border-color: rgba(192,64,42,0.4); color: var(--red); }
+.rec-btn.recording { border-color: var(--red); color: var(--red); background: var(--red-dim); animation: pulse 1s ease-in-out infinite; }
+
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+.rec-playback { flex: 1; height: 28px; display: none; }
+.rec-playback.show { display: block; }
+.rec-playback audio { width: 100%; height: 100%; }
+
+/* Actions */
+.study-actions {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px 16px;
+  flex-shrink: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.study-actions.show { opacity: 1; pointer-events: auto; }
+
+.act-btn {
+  flex: 1;
+  padding: 14px 10px;
+  border: 1px solid;
+  background: transparent;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.act-ok { border-color: rgba(74,124,89,0.4); color: #7dc99a; }
+.act-ok:hover, .act-ok:active { background: var(--green); color: white; border-color: var(--green); }
+
+.act-ng { border-color: rgba(192,64,42,0.4); color: #e07060; }
+.act-ng:hover, .act-ng:active { background: var(--red); color: white; border-color: var(--red); }
+
+/* Study tools bar */
+.tools-bar {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px;
+  border-top: 1px solid var(--border2);
+  flex-shrink: 0;
+}
+
+.tool-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text3);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.tool-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+.tool-btn.active { border-color: var(--gold-dim); color: var(--gold); background: rgba(195,158,82,0.06); }
+
+/* ── RESULT SCREEN ── */
+#result { justify-content: center; align-items: center; padding: 24px; }
+
+.result-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 36px 28px;
+  position: relative;
+}
+
+.result-card::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px solid var(--border2);
+  pointer-events: none;
+}
+
+.result-score-wrap { text-align: center; margin-bottom: 28px; }
+
+.result-big {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 4.5rem;
+  font-weight: 700;
+  color: var(--gold2);
+  line-height: 1;
+}
+
+.result-denom {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text3);
+  letter-spacing: 0.2em;
+  margin-top: 6px;
+}
+
+.result-msg {
+  font-size: 0.88rem;
+  color: var(--text2);
+  line-height: 1.8;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.result-divider { height: 1px; background: var(--border); margin-bottom: 20px; }
+
+.wrong-section-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.25em;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.wrong-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; max-height: 200px; overflow-y: auto; }
+
+.wrong-item {
+  padding: 10px 12px;
+  background: var(--red-dim);
+  border-left: 2px solid var(--red);
+}
+
+.wrong-item .wi-name { font-size: 0.85rem; color: var(--text); margin-bottom: 2px; }
+.wrong-item .wi-artist { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--text3); }
+
+.result-btns { display: flex; flex-direction: column; gap: 8px; }
+
+.result-btn {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid;
+  background: transparent;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 0.88rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.result-btn.primary { border-color: var(--gold-dim); color: var(--gold); }
+.result-btn.primary:hover { background: var(--gold); color: var(--bg); }
+
+.result-btn.secondary { border-color: var(--border); color: var(--text2); }
+.result-btn.secondary:hover { border-color: var(--text2); color: var(--text); }
+
+/* ── EDITOR SCREEN ── */
+#editor { }
+#editor .content { padding: 16px; flex: 1; overflow-y: auto; }
+
+.editor-form { display: flex; flex-direction: column; gap: 14px; }
+
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+
+.form-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+
+.form-input, .form-select, .form-textarea {
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Noto Serif JP', serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.15s;
+  border-radius: var(--radius);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--gold-dim);
+  background: var(--surface2);
+}
+
+.form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236a5e50' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-color: var(--surface);
+  padding-right: 32px;
+  cursor: pointer;
+}
+
+.form-select option { background: #1a1814; }
+
+.form-textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
+
+.img-upload-area {
+  border: 1px dashed var(--border);
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+.img-upload-area:hover { border-color: var(--gold-dim); }
+.img-upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+.img-preview {
+  max-height: 160px;
+  max-width: 100%;
+  object-fit: contain;
+  display: none;
+  margin: 0 auto;
+}
+
+.img-preview.show { display: block; }
+
+.img-upload-hint {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text3);
+  letter-spacing: 0.12em;
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.save-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--gold);
+  color: var(--bg);
+  border: none;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  margin-top: 4px;
+}
+.save-btn:hover { opacity: 0.85; }
+.save-btn:active { opacity: 0.7; }
+
+.card-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+
+.card-list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.cli-thumb {
+  width: 40px; height: 40px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--surface2);
+}
+
+.cli-info { flex: 1; min-width: 0; }
+.cli-name { font-size: 0.82rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cli-sub { font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--text3); margin-top: 2px; }
+
+.cli-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+.cli-btn {
+  width: 28px; height: 28px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+.cli-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+.cli-btn.del:hover { border-color: rgba(192,64,42,0.4); color: var(--red); }
+
+.export-btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-top: 10px;
+}
+.export-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+.import-area {
+  position: relative;
+  overflow: hidden;
+}
+.import-area input[type="file"] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.tab {
+  flex: 1;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text3);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+.tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* No cards state */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text3);
+}
+.empty-state .ei { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.3; }
+.empty-state .et { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; }
+
+/* Category new input */
+.cat-new-row { display: flex; gap: 8px; }
+.cat-new-row input { flex: 1; }
+.cat-new-row button {
+  padding: 0 16px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.cat-new-row button:hover { border-color: var(--gold-dim); color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div class="screen active" id="home">
+  <div class="app-header">
+    <div class="app-title">美術暗記帖<span>Art History Cards</span></div>
+    <button class="header-btn gold" onclick="showScreen('editor')">＋ 編集</button>
+  </div>
+  <div class="content">
+    <div class="stats-bar">
+      <div class="stat-box">
+        <div class="stat-num" id="stat-total">0</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="stat-correct">0</div>
+        <div class="stat-label">Correct</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="stat-rate">—</div>
+        <div class="stat-label">Rate</div>
+      </div>
+    </div>
+
+    <div class="section-title">すべて学習</div>
+    <button class="all-study-btn" onclick="startStudy('all')">全カードで学習する</button>
+    <button class="reset-btn" onclick="resetAllScores()">スコアをリセット</button>
+
+    <div class="section-title">カテゴリ別</div>
+    <div class="cat-list" id="catList">
+      <div class="empty-state">
+        <div class="ei">🎨</div>
+        <div class="et">編集画面からカードを追加してください</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STUDY -->
+<div class="screen" id="study">
+  <div class="study-header">
+    <button class="back-btn" onclick="showScreen('home')">←</button>
+    <div class="study-title" id="studyTitle">学習中</div>
+    <div class="study-count" id="studyCount">1/1</div>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+
+  <div class="card-area">
+    <div class="scene" onclick="flipCard()">
+      <div class="fc" id="flashCard">
+        <!-- Front -->
+        <div class="fc-face fc-front">
+          <div class="fc-img-wrap" id="cardImgWrap">
+            <div class="fc-img-placeholder">
+              <div class="icon">🖼</div>
+              <div class="txt">NO IMAGE</div>
+            </div>
+          </div>
+          <div class="fc-front-footer">
+            <div class="fc-cat-tag" id="cardCatTag">—</div>
+            <div class="fc-tap-hint">タップして答えを見る</div>
+          </div>
+        </div>
+        <!-- Back -->
+        <div class="fc-face fc-back">
+          <div class="fc-back-content">
+            <div class="fc-work-name" id="backTitle">—</div>
+            <div class="fc-fields" id="backFields"></div>
+          </div>
+          <div class="fc-back-footer">
+            <button class="tts-btn" id="ttsBtn" onclick="speakCard(event)">
+              <span>🔊</span> 読み上げ
+            </button>
+            <button class="rec-btn" id="recBtn" onclick="toggleRecording(event)">
+              <span>🎙</span> 録音
+            </button>
+            <div class="rec-playback" id="recPlayback"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tools-bar">
+    <button class="tool-btn" id="shuffleBtn" onclick="toggleShuffle()">⇄ シャッフル</button>
+    <button class="tool-btn" id="wrongOnlyBtn" onclick="toggleWrongOnly()">✕ 不正解のみ</button>
+    <button class="tool-btn" onclick="restartStudy()">↺ 最初から</button>
+  </div>
+
+  <div class="study-actions" id="studyActions">
+    <button class="act-btn act-ng" onclick="judge(false)">✕ もう一度</button>
+    <button class="act-btn act-ok" onclick="judge(true)">○ わかった</button>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="screen" id="result">
+  <div class="result-card">
+    <div class="result-score-wrap">
+      <div class="result-big" id="resultScore">0</div>
+      <div class="result-denom" id="resultDenom">/ 0問 正解</div>
+    </div>
+    <div class="result-msg" id="resultMsg"></div>
+    <div class="result-divider"></div>
+    <div id="wrongSection" style="display:none">
+      <div class="wrong-section-title">要復習</div>
+      <div class="wrong-list" id="wrongList"></div>
+    </div>
+    <div class="result-btns">
+      <button class="result-btn primary" onclick="retryWrong()">✕ 不正解のみ再挑戦</button>
+      <button class="result-btn secondary" onclick="startStudy(currentCat)">↺ 同じセットを再開</button>
+      <button class="result-btn secondary" onclick="showScreen('home')">← ホームへ戻る</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDITOR -->
+<div class="screen" id="editor">
+  <div class="app-header">
+    <button class="header-btn" onclick="showScreen('home')">← 戻る</button>
+    <div class="app-title" style="font-size:1.1rem">カード管理</div>
+    <div style="width:60px"></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('add')">追加・編集</button>
+    <button class="tab" onclick="switchTab('manage')">カード一覧</button>
+    <button class="tab" onclick="switchTab('data')">データ管理</button>
+  </div>
+
+  <div class="content" style="padding:16px; overflow-y:auto; flex:1;">
+
+    <!-- ADD TAB -->
+    <div class="tab-content active" id="tab-add">
+      <div class="editor-form" id="editorForm">
+        <input type="hidden" id="editId" value="">
+
+        <div class="form-field">
+          <div class="form-label">作品画像</div>
+          <div class="img-upload-area" id="imgUploadArea">
+            <input type="file" accept="image/*" onchange="handleImgUpload(event)" id="imgInput">
+            <img class="img-preview" id="imgPreview" src="" alt="">
+            <div class="img-upload-hint" id="imgHint">タップして画像を選択</div>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <div class="form-label">作品名 *</div>
+          <input class="form-input" id="f-title" type="text" placeholder="例：モナ・リザ">
+        </div>
+
+        <div class="form-field">
+          <div class="form-label">作家名 *</div>
+          <input class="form-input" id="f-artist" type="text" placeholder="例：レオナルド・ダ・ヴィンチ">
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <div class="form-label">年代</div>
+            <input class="form-input" id="f-year" type="text" placeholder="例：1503-1519年">
+          </div>
+          <div class="form-field">
+            <div class="form-label">国</div>
+            <input class="form-input" id="f-country" type="text" placeholder="例：イタリア">
+          </div>
+        </div>
+
+        <div class="form-field">
+          <div class="form-label">美術様式</div>
+          <input class="form-input" id="f-style" type="text" placeholder="例：ルネサンス">
+        </div>
+
+        <div class="form-field">
+          <div class="form-label">所蔵館</div>
+          <input class="form-input" id="f-museum" type="text" placeholder="例：ルーヴル美術館（パリ）">
+        </div>
+
+        <div class="form-field">
+          <div class="form-label">カテゴリ</div>
+          <select class="form-select" id="f-category">
+            <option value="">カテゴリを選択</option>
+          </select>
+          <div class="cat-new-row" style="margin-top:6px">
+            <input class="form-input" id="newCatInput" placeholder="新しいカテゴリを追加" style="font-size:0.82rem; padding:8px 10px;">
+            <button onclick="addCategory()">追加</button>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <div class="form-label">メモ</div>
+          <textarea class="form-textarea" id="f-memo" placeholder="補足情報など（任意）"></textarea>
+        </div>
+
+        <button class="save-btn" onclick="saveCard()">カードを保存する</button>
+        <button class="reset-btn" onclick="clearForm()" style="margin-top:0">フォームをクリア</button>
+      </div>
+    </div>
+
+    <!-- MANAGE TAB -->
+    <div class="tab-content" id="tab-manage">
+      <div style="margin-bottom:12px; display:flex; gap:8px; align-items:center;">
+        <select class="form-select" id="filterCat" onchange="renderCardList()" style="flex:1; padding:8px 10px; font-size:0.82rem;">
+          <option value="">すべてのカテゴリ</option>
+        </select>
+      </div>
+      <div class="card-list" id="cardListEl"></div>
+    </div>
+
+    <!-- DATA TAB -->
+    <div class="tab-content" id="tab-data">
+      <div style="display:flex; flex-direction:column; gap:10px; padding-top:4px;">
+        <div class="form-label" style="margin-bottom:4px">データのエクスポート／インポート</div>
+        <p style="font-size:0.78rem; color:var(--text3); line-height:1.7;">PCでカードを作成・編集したデータをJSONファイルとして書き出し、Googleドライブ等で管理できます。スマホで開いた場合はインポートで読み込んでください。</p>
+
+        <button class="export-btn" onclick="exportData()">📤 JSONとして書き出す（エクスポート）</button>
+
+        <div class="import-area">
+          <button class="export-btn" style="width:100%">📥 JSONを読み込む（インポート）</button>
+          <input type="file" accept=".json" onchange="importData(event)">
+        </div>
+
+        <div style="height:1px; background:var(--border); margin:4px 0;"></div>
+
+        <div class="form-label" style="margin-bottom:4px">サンプルデータ</div>
+        <button class="export-btn" onclick="loadSample()">🎨 サンプルカードを読み込む</button>
+
+        <div style="height:1px; background:var(--border); margin:4px 0;"></div>
+        <div class="form-label" style="margin-bottom:4px; color:var(--red);">危険操作</div>
+        <button class="reset-btn" onclick="deleteAllCards()">🗑 全カードを削除する</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STATE ──
+let cards = [];
+let categories = [];
+let scores = {}; // cardId -> {correct, total}
+let studyQueue = [];
+let studyIdx = 0;
+let studyScore = 0;
+let studyWrong = [];
+let currentCat = 'all';
+let isFlipped = false;
+let isShuffle = false;
+let isWrongOnly = false;
+let mediaRecorder = null;
+let recordedChunks = [];
+let isRecording = false;
+let currentAudio = null;
+let speechSynth = window.speechSynthesis;
+let isSpeaking = false;
+
+// ── STORAGE ──
+function save() {
+  localStorage.setItem('bijutsu_cards', JSON.stringify(cards));
+  localStorage.setItem('bijutsu_cats', JSON.stringify(categories));
+  localStorage.setItem('bijutsu_scores', JSON.stringify(scores));
+}
+
+function load() {
+  try {
+    cards = JSON.parse(localStorage.getItem('bijutsu_cards') || '[]');
+    categories = JSON.parse(localStorage.getItem('bijutsu_cats') || '["西洋美術史","日本美術史","近現代美術","東洋美術","その他"]');
+    scores = JSON.parse(localStorage.getItem('bijutsu_scores') || '{}');
+  } catch(e) {
+    cards = []; categories = ["西洋美術史","日本美術史","近現代美術","東洋美術","その他"]; scores = {};
+  }
+}
+
+// ── SCREENS ──
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'home') renderHome();
+  if (id === 'editor') renderEditor();
+}
+
+// ── HOME ──
+function renderHome() {
+  const totalCards = cards.length;
+  let totalCorrect = 0, totalAttempted = 0;
+  cards.forEach(c => {
+    const s = scores[c.id];
+    if (s) { totalCorrect += s.correct; totalAttempted += s.total; }
+  });
+  document.getElementById('stat-total').textContent = totalCards;
+  document.getElementById('stat-correct').textContent = totalAttempted > 0 ? totalCorrect : 0;
+  document.getElementById('stat-rate').textContent = totalAttempted > 0 ? Math.round(totalCorrect/totalAttempted*100) + '%' : '—';
+
+  const catList = document.getElementById('catList');
+  if (cards.length === 0) {
+    catList.innerHTML = `<div class="empty-state"><div class="ei">🎨</div><div class="et">編集画面からカードを追加してください</div></div>`;
+    return;
+  }
+
+  const usedCats = [...new Set(cards.map(c => c.category || 'その他'))];
+  catList.innerHTML = usedCats.map(cat => {
+    const catCards = cards.filter(c => (c.category||'その他') === cat);
+    let cc = 0, ct = 0;
+    catCards.forEach(c => { const s = scores[c.id]; if(s){ cc+=s.correct; ct+=s.total; } });
+    const pct = ct > 0 ? Math.round(cc/ct*100) : 0;
+    const circ = 2 * Math.PI * 14;
+    const offset = circ - (pct/100)*circ;
+    return `<div class="cat-item" onclick="startStudy('${escHtml(cat)}')">
+      <div class="cat-icon">🗂</div>
+      <div class="cat-info">
+        <div class="cat-name">${escHtml(cat)}</div>
+        <div class="cat-meta">${catCards.length}枚 · 正解率 ${pct}%</div>
+      </div>
+      <div class="progress-ring">
+        <svg viewBox="0 0 36 36">
+          <circle class="track" cx="18" cy="18" r="14"/>
+          <circle class="fill" cx="18" cy="18" r="14" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>
+        </svg>
+        <div class="ring-text">${pct}%</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function resetAllScores() {
+  if (!confirm('全スコアをリセットしますか？')) return;
+  scores = {};
+  save();
+  renderHome();
+  showToast('スコアをリセットしました');
+}
+
+// ── STUDY ──
+function startStudy(cat) {
+  currentCat = cat;
+  isWrongOnly = false;
+  isShuffle = false;
+  buildQueue(cat, false);
+  if (studyQueue.length === 0) { showToast('このカテゴリにカードがありません'); return; }
+  studyIdx = 0;
+  studyScore = 0;
+  studyWrong = [];
+  showScreen('study');
+  updateStudyTools();
+  showStudyCard();
+}
+
+function buildQueue(cat, wrongOnly) {
+  let pool = cat === 'all' ? [...cards] : cards.filter(c => (c.category||'その他') === cat);
+  if (wrongOnly) pool = studyWrong.map(id => cards.find(c => c.id === id)).filter(Boolean);
+  if (isShuffle) pool = pool.sort(() => Math.random() - 0.5);
+  studyQueue = pool;
+  document.getElementById('studyTitle').textContent = cat === 'all' ? 'すべてのカード' : cat;
+}
+
+function showStudyCard() {
+  if (studyIdx >= studyQueue.length) { showResult(); return; }
+  const card = studyQueue[studyIdx];
+  isFlipped = false;
+  document.getElementById('flashCard').classList.remove('flipped');
+  document.getElementById('studyActions').classList.remove('show');
+  stopSpeech();
+
+  // Image
+  const imgWrap = document.getElementById('cardImgWrap');
+  if (card.image) {
+    imgWrap.innerHTML = `<img src="${card.image}" alt="${escHtml(card.title)}" style="width:100%;height:100%;object-fit:contain;">`;
+  } else {
+    imgWrap.innerHTML = `<div class="fc-img-placeholder"><div class="icon">🖼</div><div class="txt">NO IMAGE</div></div>`;
+  }
+
+  document.getElementById('cardCatTag').textContent = card.category || 'その他';
+  document.getElementById('backTitle').textContent = card.title || '—';
+
+  const fields = [
+    { label: '作家', val: card.artist },
+    { label: '様式', val: card.style },
+    { label: '年代', val: card.year },
+    { label: '国', val: card.country },
+    { label: '所蔵館', val: card.museum },
+    { label: 'メモ', val: card.memo },
+  ];
+
+  document.getElementById('backFields').innerHTML = fields.filter(f => f.val).map(f =>
+    `<div class="fc-field"><div class="fc-field-label">${f.label}</div><div class="fc-field-val">${escHtml(f.val)}</div></div>`
+  ).join('');
+
+  // Reset recording
+  document.getElementById('recPlayback').innerHTML = '';
+  document.getElementById('recPlayback').classList.remove('show');
+  document.getElementById('recBtn').classList.remove('recording');
+
+  const total = studyQueue.length;
+  document.getElementById('studyCount').textContent = `${studyIdx+1}/${total}`;
+  document.getElementById('progFill').style.width = ((studyIdx/total)*100) + '%';
+}
+
+function flipCard() {
+  isFlipped = !isFlipped;
+  document.getElementById('flashCard').classList.toggle('flipped', isFlipped);
+  document.getElementById('studyActions').classList.toggle('show', isFlipped);
+}
+
+function judge(correct) {
+  const card = studyQueue[studyIdx];
+  if (!scores[card.id]) scores[card.id] = { correct: 0, total: 0 };
+  scores[card.id].total++;
+  if (correct) { scores[card.id].correct++; studyScore++; }
+  else studyWrong.push(card.id);
+  save();
+  studyIdx++;
+  showStudyCard();
+}
+
+function showResult() {
+  const total = studyQueue.length;
+  const pct = total > 0 ? Math.round(studyScore/total*100) : 0;
+  document.getElementById('resultScore').textContent = studyScore;
+  document.getElementById('resultDenom').textContent = `/ ${total}問 正解（${pct}%）`;
+  const msgs = ['さらなる学習が必要です。', 'まだ復習が必要です。', 'よくできました。', '完璧です！'];
+  document.getElementById('resultMsg').textContent = msgs[pct===100?3:pct>=70?2:pct>=40?1:0];
+
+  const ws = document.getElementById('wrongSection');
+  const wl = document.getElementById('wrongList');
+  const wrongCards = studyWrong.map(id => cards.find(c => c.id === id)).filter(Boolean);
+  if (wrongCards.length > 0) {
+    ws.style.display = 'block';
+    wl.innerHTML = wrongCards.map(c =>
+      `<div class="wrong-item"><div class="wi-name">${escHtml(c.title)}</div><div class="wi-artist">${escHtml(c.artist||'')}</div></div>`
+    ).join('');
+  } else ws.style.display = 'none';
+
+  showScreen('result');
+}
+
+function retryWrong() {
+  if (studyWrong.length === 0) { showToast('不正解カードはありません'); return; }
+  const wrongIds = [...studyWrong];
+  studyWrong = [];
+  studyScore = 0;
+  studyIdx = 0;
+  studyQueue = wrongIds.map(id => cards.find(c => c.id === id)).filter(Boolean);
+  if (isShuffle) studyQueue = studyQueue.sort(() => Math.random() - 0.5);
+  document.getElementById('studyTitle').textContent = '不正解カードのみ';
+  document.getElementById('studyCount').textContent = `1/${studyQueue.length}`;
+  showScreen('study');
+  showStudyCard();
+}
+
+function restartStudy() {
+  studyIdx = 0; studyScore = 0; studyWrong = [];
+  buildQueue(currentCat, false);
+  showStudyCard();
+}
+
+function toggleShuffle() {
+  isShuffle = !isShuffle;
+  document.getElementById('shuffleBtn').classList.toggle('active', isShuffle);
+  buildQueue(currentCat, false);
+  showToast(isShuffle ? 'シャッフルON' : 'シャッフルOFF');
+}
+
+function toggleWrongOnly() {
+  if (studyWrong.length === 0) { showToast('不正解カードがありません'); return; }
+  isWrongOnly = !isWrongOnly;
+  document.getElementById('wrongOnlyBtn').classList.toggle('active', isWrongOnly);
+  if (isWrongOnly) {
+    studyQueue = studyWrong.map(id => cards.find(c => c.id === id)).filter(Boolean);
+    if (isShuffle) studyQueue = studyQueue.sort(() => Math.random() - 0.5);
+  } else buildQueue(currentCat, false);
+  studyIdx = 0;
+  showStudyCard();
+}
+
+function updateStudyTools() {
+  document.getElementById('shuffleBtn').classList.toggle('active', isShuffle);
+  document.getElementById('wrongOnlyBtn').classList.toggle('active', isWrongOnly);
+}
+
+// ── TTS ──
+function speakCard(e) {
+  e.stopPropagation();
+  if (!speechSynth) return;
+  if (isSpeaking) { stopSpeech(); return; }
+  const card = studyQueue[studyIdx];
+  if (!card) return;
+  const text = [card.title, card.artist, card.style, card.year, card.country, card.museum].filter(Boolean).join('。');
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'ja-JP';
+  utter.rate = 0.9;
+  utter.onend = () => { isSpeaking = false; document.getElementById('ttsBtn').classList.remove('speaking'); };
+  isSpeaking = true;
+  document.getElementById('ttsBtn').classList.add('speaking');
+  speechSynth.speak(utter);
+}
+
+function stopSpeech() {
+  if (speechSynth) speechSynth.cancel();
+  isSpeaking = false;
+  const btn = document.getElementById('ttsBtn');
+  if (btn) btn.classList.remove('speaking');
+}
+
+// ── RECORDING ──
+async function toggleRecording(e) {
+  e.stopPropagation();
+  if (isRecording) {
+    mediaRecorder.stop();
+    return;
+  }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    recordedChunks = [];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = ev => { if (ev.data.size > 0) recordedChunks.push(ev.data); };
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+      const url = URL.createObjectURL(blob);
+      const pb = document.getElementById('recPlayback');
+      pb.innerHTML = `<audio controls src="${url}" style="width:100%;height:28px;"></audio>`;
+      pb.classList.add('show');
+      stream.getTracks().forEach(t => t.stop());
+      isRecording = false;
+      document.getElementById('recBtn').classList.remove('recording');
+    };
+    mediaRecorder.start();
+    isRecording = true;
+    document.getElementById('recBtn').classList.add('recording');
+  } catch(err) {
+    showToast('マイクへのアクセスが許可されていません');
+  }
+}
+
+// ── EDITOR ──
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const names = ['add','manage','data'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if (name === 'manage') renderCardList();
+}
+
+function renderEditor() {
+  renderCategorySelect('f-category');
+  renderCategorySelect('filterCat', true);
+}
+
+function renderCategorySelect(id, withAll=false) {
+  const sel = document.getElementById(id);
+  const cur = sel.value;
+  sel.innerHTML = withAll ? '<option value="">すべてのカテゴリ</option>' : '<option value="">カテゴリを選択</option>';
+  categories.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    sel.appendChild(opt);
+  });
+  if (cur) sel.value = cur;
+}
+
+function addCategory() {
+  const input = document.getElementById('newCatInput');
+  const val = input.value.trim();
+  if (!val) return;
+  if (categories.includes(val)) { showToast('既に存在するカテゴリです'); return; }
+  categories.push(val);
+  save();
+  renderCategorySelect('f-category');
+  renderCategorySelect('filterCat', true);
+  document.getElementById('f-category').value = val;
+  input.value = '';
+  showToast(`「${val}」を追加しました`);
+}
+
+function handleImgUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    document.getElementById('imgPreview').src = ev.target.result;
+    document.getElementById('imgPreview').classList.add('show');
+    document.getElementById('imgHint').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveCard() {
+  const title = document.getElementById('f-title').value.trim();
+  const artist = document.getElementById('f-artist').value.trim();
+  if (!title) { showToast('作品名は必須です'); return; }
+
+  const editId = document.getElementById('editId').value;
+  const imgSrc = document.getElementById('imgPreview').src;
+  const hasImg = document.getElementById('imgPreview').classList.contains('show');
+
+  const cardData = {
+    id: editId || Date.now().toString(),
+    title,
+    artist,
+    year: document.getElementById('f-year').value.trim(),
+    country: document.getElementById('f-country').value.trim(),
+    style: document.getElementById('f-style').value.trim(),
+    museum: document.getElementById('f-museum').value.trim(),
+    category: document.getElementById('f-category').value || 'その他',
+    memo: document.getElementById('f-memo').value.trim(),
+    image: hasImg ? imgSrc : '',
+  };
+
+  if (editId) {
+    const idx = cards.findIndex(c => c.id === editId);
+    if (idx > -1) cards[idx] = cardData;
+  } else {
+    cards.push(cardData);
+  }
+
+  save();
+  clearForm();
+  showToast(editId ? 'カードを更新しました' : 'カードを保存しました');
+  renderCardList();
+}
+
+function clearForm() {
+  document.getElementById('editId').value = '';
+  document.getElementById('f-title').value = '';
+  document.getElementById('f-artist').value = '';
+  document.getElementById('f-year').value = '';
+  document.getElementById('f-country').value = '';
+  document.getElementById('f-style').value = '';
+  document.getElementById('f-museum').value = '';
+  document.getElementById('f-category').value = '';
+  document.getElementById('f-memo').value = '';
+  document.getElementById('imgPreview').src = '';
+  document.getElementById('imgPreview').classList.remove('show');
+  document.getElementById('imgHint').style.display = '';
+  document.getElementById('imgInput').value = '';
+}
+
+function editCard(id) {
+  const card = cards.find(c => c.id === id);
+  if (!card) return;
+  switchTab('add');
+  document.getElementById('editId').value = card.id;
+  document.getElementById('f-title').value = card.title || '';
+  document.getElementById('f-artist').value = card.artist || '';
+  document.getElementById('f-year').value = card.year || '';
+  document.getElementById('f-country').value = card.country || '';
+  document.getElementById('f-style').value = card.style || '';
+  document.getElementById('f-museum').value = card.museum || '';
+  document.getElementById('f-category').value = card.category || '';
+  document.getElementById('f-memo').value = card.memo || '';
+  if (card.image) {
+    document.getElementById('imgPreview').src = card.image;
+    document.getElementById('imgPreview').classList.add('show');
+    document.getElementById('imgHint').style.display = 'none';
+  }
+  window.scrollTo(0, 0);
+}
+
+function deleteCard(id) {
+  if (!confirm('このカードを削除しますか？')) return;
+  cards = cards.filter(c => c.id !== id);
+  delete scores[id];
+  save();
+  renderCardList();
+  showToast('カードを削除しました');
+}
+
+function renderCardList() {
+  const filterCat = document.getElementById('filterCat').value;
+  const list = filterCat ? cards.filter(c => (c.category||'その他') === filterCat) : cards;
+  const el = document.getElementById('cardListEl');
+  if (list.length === 0) {
+    el.innerHTML = `<div class="empty-state"><div class="ei">🃏</div><div class="et">カードがありません</div></div>`;
+    return;
+  }
+  el.innerHTML = list.map(c => {
+    const s = scores[c.id];
+    const pct = s && s.total > 0 ? Math.round(s.correct/s.total*100) + '%' : '未挑戦';
+    return `<div class="card-list-item">
+      ${c.image ? `<img class="cli-thumb" src="${c.image}" alt="">` : `<div class="cli-thumb" style="display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:1.2rem;">🖼</div>`}
+      <div class="cli-info">
+        <div class="cli-name">${escHtml(c.title)}</div>
+        <div class="cli-sub">${escHtml(c.artist||'—')} · ${escHtml(c.category||'その他')} · ${pct}</div>
+      </div>
+      <div class="cli-actions">
+        <button class="cli-btn" onclick="editCard('${c.id}')">✏</button>
+        <button class="cli-btn del" onclick="deleteCard('${c.id}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── DATA ──
+function exportData() {
+  const data = { cards, categories, scores, exported: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `bijutsu-cards-${new Date().toLocaleDateString('ja-JP').replace(/\//g,'-')}.json`;
+  a.click();
+  showToast('エクスポートしました');
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data.cards) throw new Error('invalid');
+      if (!confirm(`${data.cards.length}枚のカードをインポートします。現在のデータに追加されます。よろしいですか？`)) return;
+      // Merge
+      const existingIds = new Set(cards.map(c => c.id));
+      data.cards.forEach(c => { if (!existingIds.has(c.id)) cards.push(c); });
+      if (data.categories) {
+        data.categories.forEach(cat => { if (!categories.includes(cat)) categories.push(cat); });
+      }
+      if (data.scores) Object.assign(scores, data.scores);
+      save();
+      renderEditor();
+      showToast('インポートが完了しました');
+    } catch(err) {
+      showToast('読み込みに失敗しました');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function deleteAllCards() {
+  if (!confirm('全カードを削除します。この操作は取り消せません。よろしいですか？')) return;
+  cards = []; scores = {};
+  save();
+  renderCardList();
+  showToast('全カードを削除しました');
+}
+
+function loadSample() {
+  if (!confirm('サンプルカードを追加します。よろしいですか？')) return;
+  const samples = [
+    { id:'s1', title:'モナ・リザ', artist:'レオナルド・ダ・ヴィンチ', year:'1503-1519年頃', country:'イタリア', style:'ルネサンス', museum:'ルーヴル美術館（パリ）', category:'西洋美術史', memo:'スフマート技法の代表作', image:'' },
+    { id:'s2', title:'最後の晩餐', artist:'レオナルド・ダ・ヴィンチ', year:'1495-1498年', country:'イタリア', style:'ルネサンス', museum:'サンタ・マリア・デッレ・グラツィエ修道院（ミラノ）', category:'西洋美術史', memo:'一点透視図法を活用', image:'' },
+    { id:'s3', title:'システィーナ礼拝堂天井画', artist:'ミケランジェロ', year:'1508-1512年', country:'イタリア', style:'ルネサンス', museum:'ヴァチカン美術館', category:'西洋美術史', memo:'「アダムの創造」を含む', image:'' },
+    { id:'s4', title:'睡蓮', artist:'クロード・モネ', year:'1896-1926年（連作）', country:'フランス', style:'印象主義', museum:'オランジュリー美術館（パリ）ほか', category:'西洋美術史', memo:'ジヴェルニーの庭を描いた連作', image:'' },
+    { id:'s5', title:'ひまわり', artist:'フィンセント・ファン・ゴッホ', year:'1888年', country:'オランダ', style:'後期印象主義', museum:'ナショナル・ギャラリー（ロンドン）ほか', category:'西洋美術史', memo:'7点の連作', image:'' },
+    { id:'s6', title:'富嶽三十六景・神奈川沖浪裏', artist:'葛飾北斎', year:'1831年頃', country:'日本', style:'浮世絵', museum:'大英博物館ほか', category:'日本美術史', memo:'木版画。世界的に著名', image:'' },
+    { id:'s7', title:'見返り美人図', artist:'菱川師宣', year:'1690年代', country:'日本', style:'浮世絵', museum:'東京国立博物館', category:'日本美術史', memo:'浮世絵の祖と呼ばれる', image:'' },
+    { id:'s8', title:'叫び', artist:'エドヴァルト・ムンク', year:'1893年', country:'ノルウェー', style:'表現主義', museum:'ノルウェー国立美術館（オスロ）', category:'近現代美術', memo:'実存主義的不安の表現', image:'' },
+  ];
+  const existingIds = new Set(cards.map(c => c.id));
+  samples.forEach(s => { if (!existingIds.has(s.id)) cards.push(s); });
+  if (!categories.includes('西洋美術史')) categories.push('西洋美術史');
+  if (!categories.includes('日本美術史')) categories.push('日本美術史');
+  if (!categories.includes('近現代美術')) categories.push('近現代美術');
+  save();
+  renderEditor();
+  showToast(`${samples.length}枚のサンプルを追加しました`);
+}
+
+// ── UTILS ──
+function escHtml(str) {
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── INIT ──
+load();
+renderHome();
+renderCategorySelect('f-category');
+renderCategorySelect('filterCat', true);
+</script>
+</body>
+</html>
